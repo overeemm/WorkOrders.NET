@@ -1,0 +1,115 @@
+﻿@{
+  ViewBag.Title = "Index";
+  Layout = null;
+}
+
+<!DOCTYPE html>
+
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+  <meta charset="utf-8" />
+
+  <!-- Set the viewport width to device width for mobile -->
+  <meta name="viewport" content="width=device-width,initial-scale=1.0, user-scalable=no" />
+
+  <title>Werkbonnen</title>
+
+  <link rel="stylesheet" href="@Url.Content("~/Content/foundation.min.css")">
+  <link rel="stylesheet" href="@Url.Content("~/signaturepad/jquery.signaturepad.css")">
+  <link rel="stylesheet" href="@Url.Content("~/Content/app.css")">
+
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <link rel="apple-touch-icon-precomposed" href="@Url.Content("~/Content/apple.png")" />
+  <link rel="apple-touch-startup-image" href="@Url.Content("~/Content/splash.png")" media="(device-width: 320px) and (device-height: 480px) and (-webkit-device-pixel-ratio: 2)">
+
+  <script type="text/javascript" language="javascript">
+
+    function updateOrientation() {
+
+      $('.sigWrapper').removeClass("orientleft").removeClass("orientright");
+      if (window.orientation == -90) {
+        $('.sigWrapper').addClass("orientright");
+      }
+      if (window.orientation == 90) {
+        $('.sigWrapper').addClass("orientleft");
+      }
+      if (window.orientation == 0) {
+      }
+    }
+  </script>
+
+</head>
+<body onorientationchange="updateOrientation();">
+
+  <div class="fixed">
+    <nav class="top-bar">
+      <ul class="title-area">
+
+        <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+        <li class="step1 active"><a href="#"><span>Wie</span></a></li>
+        <li class="step2"><a href="#"><span>Opdracht</span></a></li>
+        <li class="step3"><a href="#"><span>Oplossing</span></a></li>
+        <li class="step4"><a href="#"><span>Verstuur</span></a></li>
+
+      </ul>
+    </nav>
+  </div>
+
+  <form method="post" action="@Url.Action("Save", "WorkOrder")" class="werkbon">
+    <input type="hidden" name="from_email" value="@ViewBag.FromEmail" />
+    <input type="hidden" name="from_name" value="@ViewBag.FromName" />
+
+    <div class="row">
+
+      <div class="twelve columns step1">
+        @Html.Partial("_Wie")
+      </div>
+
+      <div class="twelve columns step2">
+        <textarea class="high" name="Opdracht" placeholder="Opdracht"></textarea>
+      </div>
+
+      <div class="twelve columns step3">
+        <textarea name="Oplossing" placeholder="Oplossing"></textarea>
+      </div>
+
+      <div class="twelve columns step3 momenten">
+        @Html.Partial("_Wanneer")
+      </div>
+
+      <div class="twelve columns step3 onderdelen">
+        @Html.Partial("_Wat")
+      </div>
+
+      <div class="twelve columns step4">
+        @Html.Partial("_Signature")
+      </div>
+
+    </div>
+  </form>
+
+
+  <script src="@Url.Content("~/Scripts/jquery-1.9.0.min.js")"></script>
+  <script src="@Url.Content("~/Scripts/bootstrap.min.js")"></script>
+  <script src="@Url.Content("~/signaturepad/jquery.signaturepad.min.js")"></script>
+  <script src="@Url.Content("~/Scripts/workorders.js")"></script>
+
+  @if(ViewBag.Goed)
+  {
+    <script>
+      window.localStorage.removeItem("werkbon");
+      window.location = '@Url.Action("Index")';
+    </script>
+  }
+  else
+  {
+    <script>
+      deserializeForm($("form"), JSON.parse(window.localStorage.getItem("werkbon")));
+    </script>
+  }
+
+</body>
+</html>

@@ -1,0 +1,88 @@
+﻿@{
+  ViewBag.Title = "Index";
+  Layout = null;
+}
+
+<!DOCTYPE html>
+
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+  <meta charset="utf-8" />
+
+  <!-- Set the viewport width to device width for mobile -->
+  <meta name="viewport" content="width=device-width" />
+
+  <title>Werkbonnen</title>
+
+  <link rel="stylesheet" href="@Url.Content("~/Content/foundation.min.css")">
+  <link rel="stylesheet" href="@Url.Content("~/signaturepad/jquery.signaturepad.css")">
+  <link rel="stylesheet" href="@Url.Content("~/Content/app.css")">
+
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <link rel="apple-touch-icon-precomposed" href="@Url.Content("~/Content/apple.png")" />
+  <link rel="apple-touch-startup-image" href="@Url.Content("~/Content/splash.png")" media="(device-width: 320px) and (device-height: 480px) and (-webkit-device-pixel-ratio: 2)">
+
+</head>
+<body>
+
+  <div class="row">
+
+    <div class="twelve columns">
+
+      <form method="post" action="@Url.Action("SaveIpad", "WorkOrder")" class="werkbon">
+        <input type="hidden" name="from_email" value="@ViewBag.FromEmail" />
+        <input type="hidden" name="from_name" value="@ViewBag.FromName" />
+
+        <div class="twelve columns step1">
+          @Html.Partial("_Wie")
+
+          <textarea class="high" name="Opdracht" placeholder="Opdracht"></textarea>
+        </div>
+
+        <div class="six columns step1 momenten">
+          <textarea name="Oplossing" placeholder="Oplossing"></textarea>
+        </div>
+
+        <div class="six columns step1 momenten">
+          @Html.Partial("_Wanneer")
+        </div>
+
+        <div class="six columns step1 onderdelen">
+          @Html.Partial("_Wat")
+        </div>
+
+        <div class="clear"> </div>
+
+        <button class="button secondary step1" id="akkoord">Akkoord</button>
+
+        @Html.Partial("_Signature")
+      </form>
+    </div>
+
+  </div>
+
+
+  <script src="@Url.Content("~/Scripts/jquery-1.9.0.min.js")"></script>
+  <script src="@Url.Content("~/Scripts/bootstrap.min.js")"></script>
+  <script src="@Url.Content("~/signaturepad/jquery.signaturepad.min.js")"></script>
+  <script src="@Url.Content("~/Scripts/workorders.js")"></script>
+
+  @if(ViewBag.Goed)
+  {
+    <script>
+      window.localStorage.removeItem("werkbon");
+      window.location = '@Url.Action("Ipad")';
+    </script>
+  }
+  else
+  {
+    <script>
+      deserializeForm($("form"), JSON.parse(window.localStorage.getItem("werkbon")));
+    </script>
+  }
+
+</body>
+</html>
